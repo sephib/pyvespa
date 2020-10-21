@@ -113,4 +113,26 @@ schema cord19 {
 
     }
 
+    rank-profile bert_index_1 inherits bert {
+
+        function eval() {
+          expression:tensor(x{}):{x1:onnxModel(bert).logits{d0:0,d1:1}}
+        }
+
+        second-phase {
+          rerank-count: 10
+          expression: sum(eval)
+        }
+
+        summary-features {
+          onnxModel(bert).logits
+          eval
+          input_ids
+          attention_mask
+          token_type_ids
+        }
+
+    }
+
+
 }
